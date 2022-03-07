@@ -33,13 +33,13 @@ function moveForward()
 	end
 	-- at this point we have moved
 	if (dir == DIRS.NORTH) then
-		postion.z += -1
+		postion.z = position.z - 1
 	elseif (dir == DIRS.EAST) then
-		postion.x += 1
+		postion.x = position.x + 1
 	elseif (dir == DIRS.SOUTH) then
-		postion.z += 1
+		postion.z = position.z + 1
 	elseif (dir == DIRS.WEST) then
-		postion.x += -1
+		postion.x = position.x - 1
 	end
 	return true
 end
