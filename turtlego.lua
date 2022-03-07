@@ -99,22 +99,22 @@ tab.moveAbs = function (newPos)
 		if (newPos.x > tab.pos.x) then
 			tab.setDirection(DIRS.EAST)
 			res = tab.moveForward()
-			if (~res) then return false end
+			if (not res) then return false end
 		else 
 			tab.setDirection(DIRS.WEST)
 			res = tab.moveForward()
-			if (~res) then return false end
+			if (not res) then return false end
 		end
 	end
 	while (newPos.z ~= tab.pos.z) do
 		if (newPos.z > tab.pos.z) then
 			tab.setDirection(DIRS.SOUTH)
 			res = tab.moveForward()
-			if (~res) then return false end
+			if (not res) then return false end
 		else 
 			tab.setDirection(DIRS.NORTH)
 			res =tab.moveForward()
-			if (~res) then return false end
+			if (not res) then return false end
 		end
 	end
 	return true
@@ -132,10 +132,10 @@ tab.moveRel = function(offset)
 	for i = 1,fmag do
 		if (offset.forward > 0) then
 			res = tab.moveForward()
-			if (~res) then return false end
+			if (not res) then return false end
 		else
 			res = tab.moveBack()
-			if (~res) then return false end
+			if (not res) then return false end
 		end
 	end
 
@@ -144,10 +144,10 @@ tab.moveRel = function(offset)
 	for i = 1, rmag do
 		if (offset.right > 0) then
 			res = tab.moveForward()
-			if (~res) then return false end
+			if (not res) then return false end
 		else
 			res = tab.moveBack()
-			if (~res) then return false end
+			if (not res) then return false end
 		end
 	end
 	
@@ -155,10 +155,10 @@ tab.moveRel = function(offset)
 	for i = 1, umag do
 		if (offset.up > 0) then
 			res = tab.moveUp()
-			if (~res) then return false end
+			if (not res) then return false end
 		else
 			res = tab.moveDown()
-			if (~res) then return false end
+			if (not res) then return false end
 		end
 	end
 
