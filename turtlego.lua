@@ -1,5 +1,5 @@
 local turtlego = {}
-turtlego.postion = {x = 0, y = 0, z = 0, dir = 0};
+turtlego.position = {x = 0, y = 0, z = 0, dir = 0};
 
 local DIRS = {
 	NORTH = 0,
@@ -34,13 +34,13 @@ turtlego.moveForward = function ()
 		return result, err
 	end
 	-- at this point we have moved
-	if (dir == DIRS.NORTH) then
+	if (turtlego.position.dir == DIRS.NORTH) then
 		turtlego.position.z = turtlego.position.z - 1
-	elseif (dir == DIRS.EAST) then
+	elseif (turtlego.position.dir == DIRS.EAST) then
 		turtlego.position.x = turtlego.position.x + 1
-	elseif (dir == DIRS.SOUTH) then
+	elseif (turtlego.position.dir == DIRS.SOUTH) then
 		turtlego.position.z = turtlego.position.z + 1
-	elseif (dir == DIRS.WEST) then
+	elseif (turtlego.position.dir == DIRS.WEST) then
 		turtlego.position.x = turtlego.position.x - 1
 	end
 	return true
@@ -76,3 +76,6 @@ turtlego.moveTo = function (newPos)
 		end
 	end
 end
+
+
+return turtlego
