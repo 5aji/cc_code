@@ -95,6 +95,7 @@ tab.moveAbs = function (newPos)
 	-- given pos with x,y,z and dir, and our current pos, we want to go there.
 	
 	-- for x
+	newPos.x = newPos.x or 0
 	while (newPos.x ~= tab.pos.x) do
 		if (newPos.x > tab.pos.x) then
 			tab.setDirection(DIRS.EAST)
@@ -106,6 +107,7 @@ tab.moveAbs = function (newPos)
 			if (not res) then return false end
 		end
 	end
+	newPos.z = newPos.z or 0
 	while (newPos.z ~= tab.pos.z) do
 		if (newPos.z > tab.pos.z) then
 			tab.setDirection(DIRS.SOUTH)
@@ -128,6 +130,7 @@ end
 tab.moveRel = function(offset)
 	local oldDirection = tab.pos.dir
 	
+	offset.forward = offset.forward or 0
 	local fmag = math.abs(offset.forward)
 	for i = 1,fmag do
 		if (offset.forward > 0) then
@@ -140,6 +143,7 @@ tab.moveRel = function(offset)
 	end
 
 	tab.turnRight()
+	offset.right = offset.right or 0
 	local rmag = math.abs(offset.right)
 	for i = 1, rmag do
 		if (offset.right > 0) then
@@ -151,6 +155,7 @@ tab.moveRel = function(offset)
 		end
 	end
 	
+	offset.up = offset.up or 0 
 	local umag = math.abs(offset.up)
 	for i = 1, umag do
 		if (offset.up > 0) then
