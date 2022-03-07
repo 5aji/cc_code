@@ -98,21 +98,26 @@ tab.moveAbs = function (newPos)
 	while (newPos.x ~= tab.pos.x) do
 		if (newPos.x > tab.pos.x) then
 			tab.setDirection(DIRS.EAST)
-			tab.moveForward()
+			res = tab.moveForward()
+			if (~res) then return false end
 		else 
 			tab.setDirection(DIRS.WEST)
-			tab.moveForward()
+			res = tab.moveForward()
+			if (~res) then return false end
 		end
 	end
 	while (newPos.z ~= tab.pos.z) do
 		if (newPos.z > tab.pos.z) then
 			tab.setDirection(DIRS.SOUTH)
-			tab.moveForward()
+			res = tab.moveForward()
+			if (~res) then return false end
 		else 
 			tab.setDirection(DIRS.NORTH)
-			tab.moveForward()
+			res =tab.moveForward()
+			if (~res) then return false end
 		end
 	end
+	return true
 end
 
 tab.goHome = function()
@@ -126,9 +131,11 @@ tab.moveRel = function(offset)
 	local fmag = math.abs(offset.forward)
 	for i = 1,fmag do
 		if (offset.forward > 0) then
-			tab.moveForward()
+			res = tab.moveForward()
+			if (~res) then return false end
 		else
-			tab.moveBackward()
+			res = tab.moveBack()
+			if (~res) then return false end
 		end
 	end
 
@@ -136,23 +143,27 @@ tab.moveRel = function(offset)
 	local rmag = math.abs(offset.right)
 	for i = 1, rmag do
 		if (offset.right > 0) then
-			tab.moveForward()
+			res = tab.moveForward()
+			if (~res) then return false end
 		else
-			tab.moveBackward()
+			res = tab.moveBack()
+			if (~res) then return false end
 		end
 	end
 	
 	local umag = math.abs(offset.up)
 	for i = 1, umag do
 		if (offset.up > 0) then
-			tab.moveUp()
+			res = tab.moveUp()
+			if (~res) then return false end
 		else
-			tab.moveDown()
+			res = tab.moveDown()
+			if (~res) then return false end
 		end
 	end
 
 	tab.setDirection(oldDirection)
-
+	return true
 end	
 
 
