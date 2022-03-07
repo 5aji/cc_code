@@ -1,4 +1,5 @@
-postion = {x = 0, y = 0, z = 0, dir = 0};
+local turtlego = {}
+turtlego.postion = {x = 0, y = 0, z = 0, dir = 0};
 
 local DIRS = {
 	NORTH = 0,
@@ -7,25 +8,26 @@ local DIRS = {
 	WEST = 3
 }
 
-function setHome()
-	position.x = 0
-	position.y = 0
-	position.z = 0
-	position.dir = DIRS.NORTH
+turtlego.setHome = function ()
+	turtlego.position.x = 0
+	turtlego.position.y = 0
+	turtlego.position.z = 0
+	turtlego.position.dir = DIRS.NORTH
 end
 
 
-function turnRight()
+turtlego.turnRight = function()
 	turtle.turnRight()
-	dir = (dir + 1) % 4
+	turtlego.position.dir = (turtlego.position.dir + 1) % 4
 end
-function turnLeft()
+
+turtlego.turnLeft = function ()
 	turtle.turnLeft()
-	dir = (dir - 1) % 4
+	turtlego.position.dir = (turtlego.position.dir - 1) % 4
 end
 
 -- moves forward and increments position in proper direction
-function moveForward()
+turtlego.moveForward = function ()
 	result,err = turtle.forward() -- bool if true
 	if (not result) then
 		print("move failed: " .. err)
@@ -33,44 +35,44 @@ function moveForward()
 	end
 	-- at this point we have moved
 	if (dir == DIRS.NORTH) then
-		postion.z = position.z - 1
+		turtlego.position.z = turtlego.position.z - 1
 	elseif (dir == DIRS.EAST) then
-		postion.x = position.x + 1
+		turtlego.position.x = turtlego.position.x + 1
 	elseif (dir == DIRS.SOUTH) then
-		postion.z = position.z + 1
+		turtlego.position.z = turtlego.position.z + 1
 	elseif (dir == DIRS.WEST) then
-		postion.x = position.x - 1
+		turtlego.position.x = turtlego.position.x - 1
 	end
 	return true
 end
 
-function setDirection(newDirection)
-	while (newDirection ~= position.dir) do
-		turnLeft()
+turtlego.setDirection = function(newDirection)
+	while (newDirection ~= turtlego.position.dir) do
+		turtlego.turnLeft()
 	end
 end
 
 
-function moveTo(newPos)
+turtlego.moveTo = function (newPos)
 	-- given position with x,y,z and dir, and our current position, we want to go there.
 	
 	-- for x
-	while (newPos.x ~= position.x) do
+	while (newPos.x ~= turtlego.position.x) do
 		if (newPos.x > position.x) then
-			setDirection(DIRS.EAST)
-			moveForward()
+			turtlego.setDirection(DIRS.EAST)
+			turtlego.moveForward()
 		else 
-			setDirection(DIRS.WEST)
-			moveForward()
+			turtlego.setDirection(DIRS.WEST)
+			turtlego.moveForward()
 		end
 	end
 	while (newPos.z ~= position.z) do
 		if (newPos.z > position.z) then
-			setDirection(DIRS.NORTH)
-			moveForward()
+			turtlego.setDirection(DIRS.NORTH)
+			turtlego.moveForward()
 		else 
-			setDirection(DIRS.SOUTH)
-			moveForward()
+			turtlego.setDirection(DIRS.SOUTH)
+			turtlego.moveForward()
 		end
 	end
 end
