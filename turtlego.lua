@@ -122,8 +122,9 @@ end
 -- offset is a table of {forward = 0, right = 0, up = 0}
 tab.moveRel = function(offset)
 	local oldDirection = tab.pos.dir
-
-	for (i = 0,offset.forward) do
+	
+	local fmag = math.abs(offset.forward)
+	for i = 1,fmag do
 		if (offset.forward > 0) then
 			tab.moveForward()
 		else
@@ -132,16 +133,17 @@ tab.moveRel = function(offset)
 	end
 
 	tab.turnRight()
-	for (i = 0,offset.right) do
+	local rmag = math.abs(offset.right)
+	for i = 1, rmag do
 		if (offset.right > 0) then
 			tab.moveForward()
 		else
 			tab.moveBackward()
 		end
 	end
-
-
-	for (i = 0,offset.up) do
+	
+	local umag = math.abs(offset.up)
+	for i = 1, umag do
 		if (offset.up > 0) then
 			tab.moveUp()
 		else
