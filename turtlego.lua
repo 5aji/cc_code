@@ -58,7 +58,7 @@ turtlego.moveTo = function (newPos)
 	
 	-- for x
 	while (newPos.x ~= turtlego.position.x) do
-		if (newPos.x > position.x) then
+		if (newPos.x > turtlego.position.x) then
 			turtlego.setDirection(DIRS.EAST)
 			turtlego.moveForward()
 		else 
@@ -66,8 +66,8 @@ turtlego.moveTo = function (newPos)
 			turtlego.moveForward()
 		end
 	end
-	while (newPos.z ~= position.z) do
-		if (newPos.z > position.z) then
+	while (newPos.z ~= turtlego.position.z) do
+		if (newPos.z > turtlego.position.z) then
 			turtlego.setDirection(DIRS.NORTH)
 			turtlego.moveForward()
 		else 
