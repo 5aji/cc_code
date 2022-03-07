@@ -1,5 +1,5 @@
-local turtlego = {}
-turtlego.position = {x = 0, y = 0, z = 0, dir = 0};
+local tab = {}
+tab.pos = {x = 0, y = 0, z = 0, dir = 0};
 
 local DIRS = {
 	NORTH = 0,
@@ -8,74 +8,152 @@ local DIRS = {
 	WEST = 3
 }
 
-turtlego.setHome = function ()
-	turtlego.position.x = 0
-	turtlego.position.y = 0
-	turtlego.position.z = 0
-	turtlego.position.dir = DIRS.NORTH
+tab.setHome = function ()
+	tab.pos.x = 0
+	tab.pos.y = 0
+	tab.pos.z = 0
+	tab.pos.dir = DIRS.NORTH
 end
 
 
-turtlego.turnRight = function()
+tab.turnRight = function()
 	turtle.turnRight()
-	turtlego.position.dir = (turtlego.position.dir + 1) % 4
+	tab.pos.dir = (tab.pos.dir + 1) % 4
 end
 
-turtlego.turnLeft = function ()
+tab.turnLeft = function ()
 	turtle.turnLeft()
-	turtlego.position.dir = (turtlego.position.dir - 1) % 4
+	tab.pos.dir = (tab.pos.dir - 1) % 4
 end
 
--- moves forward and increments position in proper direction
-turtlego.moveForward = function ()
+-- moves forward and increments pos in proper direction
+tab.moveForward = function ()
 	result,err = turtle.forward() -- bool if true
 	if (not result) then
 		print("move failed: " .. err)
 		return result, err
 	end
 	-- at this point we have moved
-	if (turtlego.position.dir == DIRS.NORTH) then
-		turtlego.position.z = turtlego.position.z - 1
-	elseif (turtlego.position.dir == DIRS.EAST) then
-		turtlego.position.x = turtlego.position.x + 1
-	elseif (turtlego.position.dir == DIRS.SOUTH) then
-		turtlego.position.z = turtlego.position.z + 1
-	elseif (turtlego.position.dir == DIRS.WEST) then
-		turtlego.position.x = turtlego.position.x - 1
+	if (tab.pos.dir == DIRS.NORTH) then
+		tab.pos.z = tab.pos.z - 1
+	elseif (tab.pos.dir == DIRS.EAST) then
+		tab.pos.x = tab.pos.x + 1
+	elseif (tab.pos.dir == DIRS.SOUTH) then
+		tab.pos.z = tab.pos.z + 1
+	elseif (tab.pos.dir == DIRS.WEST) then
+		tab.pos.x = tab.pos.x - 1
+	end
+	return true
+end
+tab.moveBack = function ()
+	result,err = turtle.back() -- bool if true
+	if (not result) then
+		print("move failed: " .. err)
+		return result, err
+	end
+	-- at this point we have moved
+	if (tab.pos.dir == DIRS.NORTH) then
+		tab.pos.z = tab.pos.z + 1
+	elseif (tab.pos.dir == DIRS.EAST) then
+		tab.pos.x = tab.pos.x - 1
+	elseif (tab.pos.dir == DIRS.SOUTH) then
+		tab.pos.z = tab.pos.z - 1
+	elseif (tab.pos.dir == DIRS.WEST) then
+		tab.pos.x = tab.pos.x + 1
 	end
 	return true
 end
 
-turtlego.setDirection = function(newDirection)
-	while (newDirection ~= turtlego.position.dir) do
-		turtlego.turnLeft()
+tab.moveUp = function()
+	result, err = turtle.up()
+	if (not result) then
+		print("up failed: " .. err)
+		return result, err
+	end
+	tab.pos.y = tab.pos.y + 1
+	return true
+end
+tab.moveDown = function()
+	result, err = turtle.down()
+	if (not result) then
+		print("down failed: " .. err)
+		return result, err
+	end
+	tab.pos.y = tab.pos.y - 1
+	return true
+end
+
+
+tab.setDirection = function(newDirection)
+	while (newDirection ~= tab.pos.dir) do
+		tab.turnLeft()
 	end
 end
 
 
-turtlego.moveTo = function (newPos)
-	-- given position with x,y,z and dir, and our current position, we want to go there.
+tab.moveAbs = function (newPos)
+	-- given pos with x,y,z and dir, and our current pos, we want to go there.
 	
 	-- for x
-	while (newPos.x ~= turtlego.position.x) do
-		if (newPos.x > turtlego.position.x) then
-			turtlego.setDirection(DIRS.EAST)
-			turtlego.moveForward()
+	while (newPos.x ~= tab.pos.x) do
+		if (newPos.x > tab.pos.x) then
+			tab.setDirection(DIRS.EAST)
+			tab.moveForward()
 		else 
-			turtlego.setDirection(DIRS.WEST)
-			turtlego.moveForward()
+			tab.setDirection(DIRS.WEST)
+			tab.moveForward()
 		end
 	end
-	while (newPos.z ~= turtlego.position.z) do
-		if (newPos.z > turtlego.position.z) then
-			turtlego.setDirection(DIRS.SOUTH)
-			turtlego.moveForward()
+	while (newPos.z ~= tab.pos.z) do
+		if (newPos.z > tab.pos.z) then
+			tab.setDirection(DIRS.SOUTH)
+			tab.moveForward()
 		else 
-			turtlego.setDirection(DIRS.NORTH)
-			turtlego.moveForward()
+			tab.setDirection(DIRS.NORTH)
+			tab.moveForward()
 		end
 	end
 end
 
+tab.goHome = function()
+	tab.moveTo({x = 0, y = 0, z = 0})
+end
 
-return turtlego
+-- offset is a table of {forward = 0, right = 0, up = 0}
+tab.moveRel = function(offset)
+	local oldDirection = tab.pos.dir
+
+	for (i = 0,offset.forward) do
+		if (offset.forward > 0) then
+			tab.moveForward()
+		else
+			tab.moveBackward()
+		end
+	end
+
+	tab.turnRight()
+	for (i = 0,offset.right) do
+		if (offset.right > 0) then
+			tab.moveForward()
+		else
+			tab.moveBackward()
+		end
+	end
+
+
+	for (i = 0,offset.up) do
+		if (offset.up > 0) then
+			tab.moveUp()
+		else
+			tab.moveDown()
+		end
+	end
+
+	tab.setDirection(oldDirection)
+
+end	
+
+
+
+
+return tab
