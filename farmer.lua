@@ -19,6 +19,7 @@ end
 
 function fellTree()
 	-- chop in front, move forward
+	turtle.select(1)
 	turtle.dig()
 	nav.moveForward()
 	while true do
@@ -49,7 +50,7 @@ end
 -- wait for leaves to decay, collect loot 
 -- deposit wood, apples, sticks.
 -- refuel if necessary (check fuel)
-
+while true do
 nav.moveAbs({ z = 5, x = 1, y = 0})
 
 nav.setDirection(2)
@@ -76,7 +77,7 @@ end
 -- now go to collection point
 nav.moveAbs({x = 6, y = -2, z = 0})
 
-for i = 1,6 do
+for i = 1,30 do
 	os.sleep(10)
 	turtle.suckDown()
 end
@@ -86,7 +87,12 @@ nav.goHome()
 -- deposit
 nav.setDirection(0)
 turtle.select(1)
-turtle.drop(turtle.getItemCount() - 1)
 -- refuel
+if (turtle.getFuelLevel() < 600) then
+	turtle.refuel(10)
+end
 
+turtle.drop(turtle.getItemCount())
+os.sleep(15 * 60)
+end
 print("end of program")
