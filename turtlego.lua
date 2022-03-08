@@ -137,8 +137,7 @@ tab.goHome = function()
 end
 
 -- offset is a table of {forward = 0, right = 0, up = 0}
-tab.moveRel = function(offset)
-	local oldDirection = tab.pos.dir
+tab._moveRel = function(offset)
 	
 	offset.forward = offset.forward or 0
 	local fmag = math.abs(offset.forward)
@@ -180,6 +179,14 @@ tab.moveRel = function(offset)
 	tab.setDirection(oldDirection)
 	return true
 end	
+
+tab.moveRel = function(offset)
+	local oldDirection = tab.pos.dir
+
+	res = tab._moveRel(offset)
+	tab.setDirection(oldDirection)
+	return res
+end
 
 
 
