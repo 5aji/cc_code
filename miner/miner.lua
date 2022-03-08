@@ -96,7 +96,6 @@ end
 
 local mine_sides = function()
 	turn("left")
-	turn("left")
 	dig()
 	turn("right")
 	turn("right")
@@ -113,3 +112,5 @@ local execute = function ()
 		go_forwards()
 	end
 end
+
+execute()
