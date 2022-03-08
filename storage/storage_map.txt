@@ -1,4 +1,0 @@
-{
-	["minecraft:dirt"] =  {dir = "left",  depth = 1, count = 0},
-	["minecraft:stone"] = {dir = "right", depth = 2, count = 0}
-}
