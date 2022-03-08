@@ -95,7 +95,7 @@ tab.moveAbs = function (newPos)
 	-- given pos with x,y,z and dir, and our current pos, we want to go there.
 	
 	-- for x
-	newPos.x = newPos.x or 0
+	newPos.x = newPos.x or tab.pos.x
 	while (newPos.x ~= tab.pos.x) do
 		if (newPos.x > tab.pos.x) then
 			tab.setDirection(DIRS.EAST)
@@ -107,7 +107,7 @@ tab.moveAbs = function (newPos)
 			if (not res) then return false end
 		end
 	end
-	newPos.z = newPos.z or 0
+	newPos.z = newPos.z or tab.pos.z
 	while (newPos.z ~= tab.pos.z) do
 		if (newPos.z > tab.pos.z) then
 			tab.setDirection(DIRS.SOUTH)
@@ -116,6 +116,16 @@ tab.moveAbs = function (newPos)
 		else 
 			tab.setDirection(DIRS.NORTH)
 			res =tab.moveForward()
+			if (not res) then return false end
+		end
+	end
+	newPos.y = newPos.y or tab.pos.y
+	while (newPos.y ~= tab.pos.y) do
+		if (newPos.y > tab.pos.y) then
+			res = tab.moveUp()
+			if (not res) then return false end
+		else
+			res = tab.moveDown()
 			if (not res) then return false end
 		end
 	end

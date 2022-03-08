@@ -32,7 +32,7 @@ function fellTree()
 	end
 	while nav.moveDown() do end
 	nav.moveBack()
-	turtle.select(2)
+	turtle.select(2) -- two is birch saplings
 	if (turtle.getItemCount() > 1) then
 		turtle.place()
 	end
