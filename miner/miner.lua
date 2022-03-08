@@ -117,7 +117,7 @@ m.mine_sides = function()
 end
 
 m.check_place_torch = function(travelled)
-	if not travelled % m.torchInterval == 0 then
+	if not (travelled % m.torchInterval == 0) then
 		return false
 	end
 
