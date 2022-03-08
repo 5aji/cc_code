@@ -32,6 +32,10 @@ function fellTree()
 	end
 	while nav.moveDown() do end
 	nav.moveBack()
+	turtle.select(2)
+	if (turtle.getItemCount() > 1) then
+		turtle.place()
+	end
 end
 
 
@@ -62,11 +66,27 @@ if (res) then
 end
 
 -- goto next tree
-result = nav.moveRel({forward = 0, right = -2, up = 0})
+result = nav.moveRel({right = -2})
 if (not result) then
 	print("hit something")
 	break
 end
 end
+
+-- now go to collection point
+nav.moveAbs({x = 6, y = -2, z = 0})
+
+for i = 1,6 do
+	os.sleep(10)
+	turtle.suckDown()
+end
+nav.moveRel({up = 2})
+nav.goHome()
+
+-- deposit
+nav.setDirection(0)
+turtle.select(1)
+turtle.drop(turtle.getItemCount() - 1)
+-- refuel
 
 print("end of program")
