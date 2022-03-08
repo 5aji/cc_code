@@ -123,7 +123,7 @@ tab.moveAbs = function (newPos)
 end
 
 tab.goHome = function()
-	tab.moveTo({x = 0, y = 0, z = 0})
+	tab.moveAbs({x = 0, y = 0, z = 0})
 end
 
 -- offset is a table of {forward = 0, right = 0, up = 0}
