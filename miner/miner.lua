@@ -1,5 +1,17 @@
 local m = {}
 
+local unwanted = {
+	"minecraft:andesite",
+	"minecraft:cobbled_deepslate",
+	"minecraft:cobblestone",
+	"minecraft:diorite",
+	"minecraft:dirt",
+	"minecraft:granite",
+	"minecraft:gravel",
+	"minecraft:stone",
+	"minecraft:tuff",
+}
+
 local tArgs = { ... }
 if #tArgs ~= 1 then
 	print("Usage: miner <distance> <shape (optional)>")
@@ -175,6 +187,23 @@ m.check_place_chest = function()
 	end
 end
 
+m.drop_unwanted_items = function()
+	for i = 1,16 do
+		local tab = turtle.getItemDetail(i)
+		if not tab then
+			do end
+		else
+			for _, block in ipairs(unwanted) do
+				if tab.name == block then
+					-- drop item
+					turtle.select(i)
+					turtle.drop()
+				end
+			end
+		end
+	end
+end
+
 m.execute = function ()
 	-- go up one block if we aren't in the air already
 	local isBlock, tab = turtle.inspectDown()
@@ -187,6 +216,7 @@ m.execute = function ()
 			m.mine_sides()
 		end
 		m.dig("down")
+		m.drop_unwanted_items()
 		m.check_place_chest()
 		m.check_place_torch(travelled)
 
