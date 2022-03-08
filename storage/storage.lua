@@ -1,9 +1,8 @@
-local storage_map = {}
 -- Load storage map table
 local file = fs.open("storage_map.txt", "r")
 local data = file.readAll()
 file.close()
-textutils.unserialize(storage_map)
+local storage_map = textutils.unserialize(data)
 
 -- Get args
 local tArgs = { ... }
