@@ -74,7 +74,7 @@ m.go_forwards = function()
 
 	ok, err = turtle.forward()
 	if not ok then
-		error("Could not move: " .. err)
+		print("Could not move: " .. err)
 	end
 
 	return ok
@@ -189,7 +189,12 @@ m.execute = function ()
 		m.dig("down")
 		m.check_place_chest()
 		m.check_place_torch(travelled)
-		m.go_forwards()
+
+		local ok = m.go_forwards()
+		while not ok do
+			m.dig()
+			ok = m.go_forwards()
+		end
 	end
 end
 
