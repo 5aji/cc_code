@@ -1,16 +1,29 @@
+local m = {}
+
 local tArgs = { ... }
 if #tArgs ~= 1 then
-	print("Usage: miner <distance>")
+	print("Usage: miner <distance> <shape (optional)>")
 	return
 end
 
-local distance = tonumber(tArgs[1])
-if distance < 1 then
+m.torchInterval = 26
+m.shape = "line"
+m.distance = tonumber(tArgs[1])
+if m.distance < 1 then
 	print("Excavate diameter must be positive")
 	return
 end
 
-local try_refuel = function()
+if #tArgs >= 2 then
+	m.shape = tArgs[2]
+	if not tArgs[2] == "line" or
+		not tArgs[2] == "t" then
+		error("Invalid shape: " .. tArgs[2])
+	end
+end
+
+
+m.try_refuel = function()
 	local ok, err
 	local level = turtle.getFuelLevel()
 	if level == "unlimited" then error("Turtle does not need refueling",0) end
@@ -28,7 +41,7 @@ local try_refuel = function()
 	return false
 end
 
-local go_up = function()
+m.go_up = function()
 	local ok, err
 	local blockAbove = turtle.detectUp()
 
@@ -47,7 +60,7 @@ local go_up = function()
 	return ok
 end
 
-local go_forwards = function()
+m.go_forwards = function()
 	local ok, err
 
 	local blockFront = turtle.detect()
@@ -67,7 +80,7 @@ local go_forwards = function()
 	return ok
 end
 
-local turn = function(dir)
+m.turn = function(dir)
 	local ok, err
 	if dir == "left" then
 		ok, err = turtle.turnLeft()
@@ -82,7 +95,7 @@ local turn = function(dir)
 	end
 end
 
-local dig = function(dir)
+m.dig = function(dir)
 	if not dir then dir = "forwards" end
 	local ok, err
 	if dir == "forwards" then
@@ -94,24 +107,87 @@ local dig = function(dir)
 	end
 end
 
-local mine_sides = function()
-	turn("left")
-	dig()
-	turn("right")
-	dig("down")
-	turn("right")
-	dig()
-	turn("left")
+m.mine_sides = function()
+	m.turn("left")
+	m.dig()
+	m.turn("right")
+	m.turn("right")
+	m.dig()
+	m.turn("left")
 end
 
-local execute = function ()
-	local travelled = 0
+m.check_place_torch = function(travelled)
+	if not travelled % m.torchInterval == 0 then
+		return false
+	end
 
-	go_up()
-	for i = 1,distance do
-		mine_sides()
-		go_forwards()
+	torchIdx = -1
+
+	for i = 1,16 do
+		local tab = turtle.getItemDetail(i)
+		if tab and tab.name == "minecraft:torch" then
+			torchIdx = i
+		end
+	end
+
+	if torchIdx ~= -1 then
+		turtle.select(torchIdx)
+		turtle.placeDown()
+	else
+		error("No torch to place")
+		return false
 	end
 end
 
-execute()
+m.check_place_chest = function()
+	local chestIdx = -1
+	-- check if there are any open inventory slots
+	for i = 1,16 do
+		local tab = turtle.getItemDetail(i)
+		if not tab then
+			return false
+		elseif tab.name == "minecraft:chest" then
+			chestIdx = i
+		end
+	end
+
+	-- try to place a chest below
+	if chestIdx ~= -1 then
+		turtle.select(chestIdx)
+		turtle.placeDown()
+
+		for i = 1,16 do
+			local tab = turtle.getItemDetail(i)
+			if not tab or tab.name == "minecraft:chest" or tab.name == "minecraft:torch"
+				then
+				-- nothing
+				do end
+			else
+				turtle.select(i)
+				turtle.dropDown()
+			end
+		end
+	end
+end
+
+m.execute = function ()
+	-- go up one block if we aren't in the air already
+	local isBlock, tab = turtle.inspectDown()
+	if isBlock then
+		m.go_up()
+	end
+
+	for travelled = 1,m.distance do
+		if m.shape == "t" then
+			m.mine_sides()
+		end
+		m.dig("down")
+		m.check_place_chest()
+		m.check_place_torch(travelled)
+		m.go_forwards()
+	end
+end
+
+m.execute()
+
+return m
