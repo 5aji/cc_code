@@ -95,7 +95,8 @@ m.turn = function(dir)
 	end
 end
 
-m.dig = function(dir)
+m.dig = function(dir, hand)
+	if not hand then hand = "right" end
 	if not dir then dir = "forwards" end
 	local ok, err
 	if dir == "forwards" then
@@ -104,6 +105,10 @@ m.dig = function(dir)
 		ok, err = turtle.digUp()
 	elseif dir == "down" then
 		ok, err = turtle.digDown()
+	end
+
+	if hand == "right" and not ok then
+		m.dig(dir, "left")
 	end
 end
 
@@ -177,7 +182,7 @@ m.execute = function ()
 		m.go_up()
 	end
 
-	for travelled = 1,m.distance do
+	for travelled = 0,m.distance do
 		if m.shape == "t" then
 			m.mine_sides()
 		end
