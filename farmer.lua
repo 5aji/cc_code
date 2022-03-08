@@ -58,6 +58,7 @@ while true do
 	
 	while true do
 		-- do we have tree?
+		nav.setDirection(2)
 		res, detail = turtle.inspect()
 		if (res) then
 			if (detail.name == "minecraft:birch_log") then
@@ -70,6 +71,7 @@ while true do
 		-- goto next tree
 		result = nav.moveRel({right = -2})
 		if (not result) then
+			nav.setDirection(2)
 			print("hit end of row")
 			-- try next row
 			result = nav.moveRel({forward = -3})

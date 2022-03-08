@@ -176,7 +176,6 @@ tab._moveRel = function(offset)
 		end
 	end
 
-	tab.setDirection(oldDirection)
 	return true
 end	
 
