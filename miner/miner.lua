@@ -182,7 +182,7 @@ m.execute = function ()
 		m.go_up()
 	end
 
-	for travelled = 0,m.distance do
+	for travelled = 0,(m.distance-1) do
 		if m.shape == "t" then
 			m.mine_sides()
 		end
