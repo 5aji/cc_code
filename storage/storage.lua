@@ -7,7 +7,7 @@ textutils.unserialize(storage_map)
 
 -- Get args
 local tArgs = { ... }
-if ~((#tArgs == 3 and tArgs[2] == "get") or
+if not ((#tArgs == 3 and tArgs[2] == "get") or
      (#tArgs == 1 and tArgs[2] == "put")) then
 	print("Usage: storage get <item> <count>")
 	print("Usage: storage put <item>")
@@ -25,9 +25,9 @@ local function goto_slot(item_table)
 	-- Rotate
 	if item_table.dir == "left" then
 		turtle.turnLeft()
-	else if item_table.dir == "right" then
+	elseif item_table.dir == "right" then
 		turtle.turnRight()
-	else if item_table.dir == "backwards" then
+	elseif item_table.dir == "backwards" then
 		turtle.turnLeft()
 		turtle.turnLeft()
 	end
@@ -37,9 +37,9 @@ local function goto_home(item_table)
 	-- Rotate back
 	if item_table.dir == "left" then
 		turtle.turnRight()
-	else if item_table.dir == "right" then
+	elseif item_table.dir == "right" then
 		turtle.turnLeft()
-	else if item_table.dir == "backwards" then
+	elseif item_table.dir == "backwards" then
 		turtle.turnLeft()
 		turtle.turnLeft()
 	end
@@ -66,7 +66,7 @@ if tArgs[1] == "get" then
 	item_table.count = item_table.count - item_count
 
 	goto_home(item_table)
-else if tArgs[1] == "put" then
+elseif tArgs[1] == "put" then
 	local item_table = storage_map(turtle.getItemDetail().name)
 	local item_count = turtle.getItemDetail().count
 
