@@ -65,7 +65,12 @@ local get_items = function(name, count)
   -- Delete marked elements
   new_table = {}
   for i, filled_slot in ipairs(storage_table[name]) do
-    if deleted[i] ~= true then table.insert(new_table, filled_slot) end
+    if deleted[i] ~= true then
+      table.insert(new_table, filled_slot)
+    else
+      filled_slot.item = nil
+      table.insert(storage_table.empty, filled_slot)
+    end
   end
   storage_table[name] = new_table
 
@@ -152,7 +157,9 @@ local search = function()
   input_window.clear()
   local old_term = term.redirect(input_window)
 
-  write(">>> ")
+  term.setTextColor(colors.orange)
+  write("search> ")
+  term.setTextColor(colors.white)
   local top_choice = nil
   local query = read(nil, nil, function(text)
     scroll_window.clear()
@@ -160,9 +167,9 @@ local search = function()
     local y = 1
     top_choice = nil
     for k,v in pairs(storage_table) do
-      if string.find(k, text) and k ~= "empty" then
+      if k ~= "empty" and string.find(string.lower(v[1].item.displayName), string.lower(text)) then
         scroll_window.setCursorPos(1, y)
-        scroll_window.write(k)
+        scroll_window.write(v[1].item.displayName)
         if top_choice == nil then top_choice = k end
 
         local count = 0
@@ -185,6 +192,22 @@ local search = function()
   return top_choice
 end
 
+local usage = function()
+  local filled_num = 0
+  local num_items = 0
+  for k,v in pairs(storage_table) do
+    if k ~= "empty" then
+      filled_num = filled_num + #v
+      num_items = num_items + 1
+    end
+  end
+
+  print(string.format("Filled %d of %d slots (%3.2f%%).",
+    filled_num, filled_num + #storage_table.empty,
+    filled_num / (filled_num + #storage_table.empty) * 100))
+  print(string.format("%d unique items held.", num_items))
+end
+
 -- {{{ Basic command UI
 local show_help = function()
   print("Commands:")
@@ -192,14 +215,18 @@ local show_help = function()
   print("get     get items from system")
   print("list    list contents of system")
   print("search  search and get items from system")
+  print("usage   show storage system utilization")
   print("scan    rescan system")
   print("help    show this message")
-  print("exit    exits system")
+  print("exit    exit system")
 end
 
+term.clear()
 show_help()
 while true do
-  write(">> ")
+  term.setTextColor(colors.orange)
+  write("storage> ")
+  term.setTextColor(colors.white)
   local cmd = read()
 
   if cmd == "exit" then
@@ -217,9 +244,9 @@ while true do
     write("Item count? ")
     local count = tonumber(read())
 
-    if storage_table[name] ~= nil then
+    if storage_table[name] ~= nil and count ~= nil then
       get_items(name, count)
-    elseif storage_table["minecraft:" .. name] ~= nil then
+    elseif storage_table["minecraft:" .. name] ~= nil and count ~= nil then
       get_items("minecraft:" .. name, count)
     else
       print("Invalid item or not in storage.")
@@ -232,11 +259,13 @@ while true do
     write("Item count? ")
     local count = tonumber(read())
 
-    if storage_table[name] ~= nil then
+    if storage_table[name] ~= nil and count ~= nil then
       get_items(name, count)
     else
       print("Invalid item or not in storage.")
     end
+  elseif cmd == "usage" then
+    usage()
   else
     print("Invalid command.")
   end
