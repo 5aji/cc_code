@@ -140,7 +140,7 @@ while true do
 
 	-- replenish saplings
 	local total_saplings = getTotal("minecraft:birch_sapling")
-	getItemFromNetwork("minecraft:birch_sapling", math.max(total_saplings, 0))
+	getItemFromNetwork("minecraft:birch_sapling", math.max(64 - total_saplings, 0))
 	-- refuel
 	if (turtle.getFuelLevel() < 1000) then
 		print("refueling")

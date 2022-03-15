@@ -8,8 +8,8 @@
 -- extract charcoal from furnace output and put up top.
 
 max_wood = 6 * 64 -- amount of wood that we want
-woodchest = peripheral.wrap("left")
-coalchest = peripheral.wrap("top")
+woodchest = peripheral.wrap("back")
+coalchest = peripheral.wrap("bottom")
 furnace = peripheral.wrap("right")
 
 function find(inv, name)
@@ -39,7 +39,6 @@ function takeExcess()
 		printError("Couldn't find wood in wood chest")
 	end
 	sent = woodchest.pushItems(peripheral.getName(furnace), slot, wood_to_process, 1)
-	wood_to_process = wood_to_process - sent
 
 	print("process_wood")
 end
