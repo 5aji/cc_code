@@ -21,10 +21,7 @@ function depositWood()
 		local tab = turtle.getItemDetail(i)
 		if tab and tab.name == "minecraft:birch_log" then
 			turtle.select(i)
-			local ok, err = turtle.dropUp()
-			if not ok then
-				print("error: " .. err)
-			end
+			assert(turtle.dropUp())
 		end
 	end
 end
@@ -66,13 +63,38 @@ function fellTree()
 	end
 	while tg.moveDown() do end
 	tg.moveBack()
-	turtle.select(2) -- two is birch saplings
-	if (turtle.getItemCount() > 1) then
-		turtle.place()
+
+	-- place birch
+	local sapling_slot = nil
+	for i = 1,16 do
+		local item = turtle.getItemDetail(i)
+		if item and item.name == "minecraft:birch_sapling" then
+			turtle.place()
+			break
+		end
 	end
 end
 
-
+function selectItem(name)
+	for i = 1,16 do
+		local item = turtle.getItemDetail(i)
+		if item and item.name == name then
+			turtle.select(i)
+			return true
+		end
+	end
+	return false
+end
+function getTotal(name)
+	local total = 0
+	for i = 1,16 do
+		local item = turtle.getItemDetail(i)
+		if item and item.name == name then
+			total = total + item.count
+		end
+	end
+	return total
+end
 -- begin big loop
 -- 1. go to first tree
 -- 2. check if tree is there (minecraft:birch_log)
@@ -106,7 +128,7 @@ while true do
 		if (not result) then
 			print("hit end of row")
 			-- try next row
-   tg.setDirection(2)
+			tg.setDirection(2)
 			result = tg.moveRel({forward = -3})
 			if (not result) then
 				print("hit end of farm, collecting")
@@ -118,9 +140,6 @@ while true do
 		end
 	end
 
-	-- now go to collection point
-	tg.moveAbs({x = 6, y = -2, z = 0})
-
 	for i = 1,30 do
 		os.sleep(10)
 		turtle.suckDown()
@@ -129,15 +148,18 @@ while true do
 	tg.goHome()
 
 	-- deposit
-	tg.setDirection(nav.DIRS.NORTH)
-	turtle.select(1)
+	depositWood()
+
+	-- replenish saplings
+	local total_saplings = getTotal("minecraft:birch_sapling")
+	getItemFromNetwork("minecraft:birch_sapling", math.max(total_saplings, 0))
 	-- refuel
-	if (turtle.getFuelLevel() < 600) then
-  print("refueling")
-		turtle.refuel(10)
+	if (turtle.getFuelLevel() < 1000) then
+		getItemFromNetwork("minecraft:charcoal", 10)
+		selectItem("minecraft:charcoal")
+		turtle.refuel()
 	end
 
-	turtle.drop(turtle.getItemCount())
 	os.sleep(5 * 60)
 end
 print("end of program")
