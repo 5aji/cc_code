@@ -49,7 +49,6 @@ function getItemFromNetwork(item_name, amt)
 end
 function fellTree()
 	-- chop in front, move forward
-	turtle.select(1)
 	turtle.dig()
 	tg.moveForward()
 	while true do
@@ -65,14 +64,8 @@ function fellTree()
 	tg.moveBack()
 
 	-- place birch
-	local sapling_slot = nil
-	for i = 1,16 do
-		local item = turtle.getItemDetail(i)
-		if item and item.name == "minecraft:birch_sapling" then
-			turtle.place()
-			break
-		end
-	end
+	assert(selectItem("minecraft:birch_sapling"), "could not find birch sapling")
+	turtle.place()
 end
 
 function selectItem(name)
