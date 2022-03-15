@@ -1,7 +1,7 @@
 local tab = {}
 tab.pos = {x = 0, y = 0, z = 0, dir = 0};
 
-local DIRS = {
+tab.DIRS = {
 	NORTH = 0,
 	EAST = 1,
 	SOUTH = 2,
@@ -12,7 +12,7 @@ tab.setHome = function ()
 	tab.pos.x = 0
 	tab.pos.y = 0
 	tab.pos.z = 0
-	tab.pos.dir = DIRS.NORTH
+	tab.pos.dir = tab.DIRS.NORTH
 end
 
 
@@ -34,13 +34,13 @@ tab.moveForward = function ()
 		return result, err
 	end
 	-- at this point we have moved
-	if (tab.pos.dir == DIRS.NORTH) then
+	if (tab.pos.dir == tab.DIRS.NORTH) then
 		tab.pos.z = tab.pos.z - 1
-	elseif (tab.pos.dir == DIRS.EAST) then
+	elseif (tab.pos.dir == tab.DIRS.EAST) then
 		tab.pos.x = tab.pos.x + 1
-	elseif (tab.pos.dir == DIRS.SOUTH) then
+	elseif (tab.pos.dir == tab.DIRS.SOUTH) then
 		tab.pos.z = tab.pos.z + 1
-	elseif (tab.pos.dir == DIRS.WEST) then
+	elseif (tab.pos.dir == tab.DIRS.WEST) then
 		tab.pos.x = tab.pos.x - 1
 	end
 	return true
@@ -52,13 +52,13 @@ tab.moveBack = function ()
 		return result, err
 	end
 	-- at this point we have moved
-	if (tab.pos.dir == DIRS.NORTH) then
+	if (tab.pos.dir == tab.DIRS.NORTH) then
 		tab.pos.z = tab.pos.z + 1
-	elseif (tab.pos.dir == DIRS.EAST) then
+	elseif (tab.pos.dir == tab.DIRS.EAST) then
 		tab.pos.x = tab.pos.x - 1
-	elseif (tab.pos.dir == DIRS.SOUTH) then
+	elseif (tab.pos.dir == tab.DIRS.SOUTH) then
 		tab.pos.z = tab.pos.z - 1
-	elseif (tab.pos.dir == DIRS.WEST) then
+	elseif (tab.pos.dir == tab.DIRS.WEST) then
 		tab.pos.x = tab.pos.x + 1
 	end
 	return true
@@ -93,16 +93,16 @@ end
 
 tab.moveAbs = function (newPos)
 	-- given pos with x,y,z and dir, and our current pos, we want to go there.
-	
+
 	-- for x
 	newPos.x = newPos.x or tab.pos.x
 	while (newPos.x ~= tab.pos.x) do
 		if (newPos.x > tab.pos.x) then
-			tab.setDirection(DIRS.EAST)
+			tab.setDirection(tab.DIRS.EAST)
 			res = tab.moveForward()
 			if (not res) then return false end
-		else 
-			tab.setDirection(DIRS.WEST)
+		else
+			tab.setDirection(tab.DIRS.WEST)
 			res = tab.moveForward()
 			if (not res) then return false end
 		end
@@ -110,11 +110,11 @@ tab.moveAbs = function (newPos)
 	newPos.z = newPos.z or tab.pos.z
 	while (newPos.z ~= tab.pos.z) do
 		if (newPos.z > tab.pos.z) then
-			tab.setDirection(DIRS.SOUTH)
+			tab.setDirection(tab.DIRS.SOUTH)
 			res = tab.moveForward()
 			if (not res) then return false end
-		else 
-			tab.setDirection(DIRS.NORTH)
+		else
+			tab.setDirection(tab.DIRS.NORTH)
 			res =tab.moveForward()
 			if (not res) then return false end
 		end
@@ -137,8 +137,8 @@ tab.goHome = function()
 end
 
 -- offset is a table of {forward = 0, right = 0, up = 0}
-tab._moveRel = function(offset)
-	
+tab.moveRelHelper = function(offset)
+
 	offset.forward = offset.forward or 0
 	local fmag = math.abs(offset.forward)
 	for i = 1,fmag do
@@ -163,8 +163,8 @@ tab._moveRel = function(offset)
 			if (not res) then return false end
 		end
 	end
-	
-	offset.up = offset.up or 0 
+
+	offset.up = offset.up or 0
 	local umag = math.abs(offset.up)
 	for i = 1, umag do
 		if (offset.up > 0) then
@@ -176,13 +176,14 @@ tab._moveRel = function(offset)
 		end
 	end
 
+--	tab.setDirection(oldDirection)
 	return true
-end	
+end
 
 tab.moveRel = function(offset)
 	local oldDirection = tab.pos.dir
 
-	res = tab._moveRel(offset)
+	res = tab.moveRelHelper(offset)
 	tab.setDirection(oldDirection)
 	return res
 end
