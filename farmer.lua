@@ -107,7 +107,7 @@ while true do
 	while true do
 		-- do we have tree?
 		tg.setDirection(tg.DIRS.SOUTH)
-  res, detail = turtle.inspect()
+  		res, detail = turtle.inspect()
 		if (res) then
 			if (detail.name == "minecraft:birch_log") then
 				-- felling routine
@@ -133,11 +133,6 @@ while true do
 		end
 	end
 
-	for i = 1,30 do
-		os.sleep(10)
-		turtle.suckDown()
-	end
-	tg.moveRel({up = 2})
 	tg.goHome()
 
 	-- deposit
@@ -148,11 +143,12 @@ while true do
 	getItemFromNetwork("minecraft:birch_sapling", math.max(total_saplings, 0))
 	-- refuel
 	if (turtle.getFuelLevel() < 1000) then
-		getItemFromNetwork("minecraft:charcoal", 10)
+		print("refueling")
+		getItemFromNetwork("minecraft:charcoal", 20)
 		selectItem("minecraft:charcoal")
 		turtle.refuel()
 	end
 
-	os.sleep(5 * 60)
+	os.sleep(10 * 60)
 end
 print("end of program")
