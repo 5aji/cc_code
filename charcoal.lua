@@ -29,7 +29,10 @@ function takeExcess()
 		end
 	end
 	print("wood count: " .. wood_count)
-	wood_to_process = wood_count - max_wood
+	if wood_count < max_wood then
+		return
+	end
+	wood_to_process = 64
 
 	slot = find(woodchest, "minecraft:birch_log")
 	if (slot == -1) then
