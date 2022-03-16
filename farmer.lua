@@ -28,24 +28,31 @@ end
 
 function getItemFromNetwork(item_name, amt)
 	amt = amt or 64
-  local item_counter = 0
+	if amt <= 0 then return true end
+	local item_counter = 0
 
-	local modem = peripheral.find("modem")
-	local chest_names = modem.getNamesRemote()
-	local turtle_name = modem.getNameLocal()
+	local modem = assert(peripheral.find("modem"), "could not find modem")
+	local chest_names = assert(modem.getNamesRemote(), "could not get chests")
+	local turtle_name = assert(modem.getNameLocal(), "could not get turtle name")
+	repeat
+		turtle_name = modem.getNameLocal()
+		os.sleep(0.5)
+		print("getting turtle name")
+	until turtle_name
+
 	for _,name in ipairs(chest_names) do
-		local chest = peripheral.wrap(name)
+		local chest = assert(peripheral.wrap(name), "could not wrap chest")
 		local chest_inventory = chest.list()
 
 		for i,chest_item in pairs(chest_inventory) do
 			if chest_item.name == item_name then
-        amt = amt - chest.pushItems(turtle_name, i, amt)
-        if amt <= 0 then return true end
+        			amt = amt - chest.pushItems(turtle_name, i, amt)
+				if amt <= 0 then return true end
 			end
 		end
 	end
 
-  return false
+	return false
 end
 function fellTree()
 	-- chop in front, move forward
